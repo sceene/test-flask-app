@@ -5,7 +5,7 @@ from flask import Flask, make_response, jsonify
 def create_app(config):
 
     # == [ APP ] == #
-    app = Flask(__name__)
+    app = Flask(__name__, static_url_path='/static')
 
     @app.route("/")
     def index():
@@ -13,7 +13,7 @@ def create_app(config):
 
     @app.route("/loaderio-6a1867014e730486b7945cc699b112b7/")
     def loaderio():
-        return "Loader IO"
+        return app.send_static_file('loaderio-6a1867014e730486b7945cc699b112b7.txt')
 
     # == [ ERRORS ] == #
     @app.errorhandler(400)
