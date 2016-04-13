@@ -11,9 +11,6 @@ def create_app(config):
     def index():
         return "Sceene inside Docker!!"
 
-    @app.route("/loaderio-6a1867014e730486b7945cc699b112b7/")
-    def loaderio():
-        return app.send_static_file('loaderio-6a1867014e730486b7945cc699b112b7.txt')
 
     # == [ ERRORS ] == #
     @app.errorhandler(400)
