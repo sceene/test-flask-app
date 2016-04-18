@@ -1,29 +1,5 @@
-from flask import Flask, request
-import time
-import zmq
-
-HOST = '127.0.0.1'
-PORT = '4444'
-
-_context = zmq.Context()
-_publisher = _context.socket(zmq.PUB)
-url = 'tcp://{}:{}'.format(HOST, PORT)
-
-def publish_message(message):
-
-    try:
-        _publisher.bind(url)
-        time.sleep(1)
-        print("sending message : {0}".format(message, _publisher))
-        _publisher.send(message.encode('ascii'))
-
-    except Exception as e:
-        raise
-        print("error {0}".format(e))
-
-    finally:
-        print("unbinding")
-        _publisher.unbind(url)
+from flask import Flask, jsonify, make_response
+import requests
 
 # == [ APP FACTORY ] == #
 def create_app():
@@ -37,17 +13,23 @@ def create_app():
 
     @app.route("/events")
     def events():
-        _strn = request.args.get('param')
-        response = 'lower case of {} is {}'.format(_strn, _strn.lower())
-        publish_message(response)
-        return response
+        qry = 'http://127.0.0.1:4444'
+        r = requests.get(qry)  # first call to get pages
+        if r.status_code != 200:
+            print('>>>ERROR: events failed.')
+
+        response = r.json()
+        return make_response(jsonify(response), 200)
 
     @app.route("/places")
     def places():
-        _strn = request.args.get('param')
-        response = 'lower case of {} is {}'.format(_strn, _strn.lower())
-        publish_message(response)
-        return response
+        qry = 'http://127.0.0.1:4443'
+        r = requests.get(qry)  # first call to get pages
+        if r.status_code != 200:
+            print('>>>ERROR: places failed.')
+
+        response = r.json()
+        return make_response(jsonify(response), 200)
 
     @app.route("/loaderio-6a1867014e730/")
     def loaderio():

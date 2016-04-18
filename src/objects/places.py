@@ -1,36 +1,10 @@
-import zmq
-import sys
-import time
-import logging
-import os
+from flask import Flask, jsonify, make_response
+app = Flask(__name__)
 
-HOST = '127.0.0.1'
-PORT = '4444'
-
-logging.basicConfig(filename='subscriber.log', level=logging.INFO)
-
-class PlacesApi(object):
-
-    def __init__(self, host=HOST, port=PORT):
-        """Initialize Worker"""
-        self.host = host
-        self.port = port
-        self._context = zmq.Context()
-        self._subscriber = self._context.socket(zmq.SUB)
-        print("Client Initiated")
-
-
-    def receive_message(self):
-        """Start receiving messages"""
-        self._subscriber.connect('tcp://{}:{}'.format(self.host, self.port))
-        self._subscriber.setsockopt(zmq.SUBSCRIBE, b"")
-
-        while True:
-            print('listening on tcp://{}:{}'.format(self.host, self.port))
-            message = self._subscriber.recv()
-            print(message)
-            logging.info('{} - {}'.format(message, time.strftime("%Y-%m-%d %H:%M")))
+@app.route('/')
+def hello_world():
+    return make_response(jsonify({"message": "Hello Places"}), 200)
 
 if __name__ == '__main__':
-    zs = PlacesApi()
-    zs.receive_message()
+    #app.run()
+    app.run(host='127.0.0.1', port=4443, debug=True)
