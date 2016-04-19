@@ -13,7 +13,7 @@ def create_app():
 
     @app.route("/events")
     def events():
-        qry = 'http://127.0.0.1:4444'
+        qry = 'tcp://127.0.0.1:4444'
         r = requests.get(qry)  # first call to get pages
         if r.status_code != 200:
             print('>>>ERROR: events failed.')
@@ -23,7 +23,7 @@ def create_app():
 
     @app.route("/places")
     def places():
-        qry = 'http://127.0.0.1:4443'
+        qry = 'tcp://127.0.0.1:4443'
         r = requests.get(qry)  # first call to get pages
         if r.status_code != 200:
             print('>>>ERROR: places failed.')
